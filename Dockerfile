@@ -2,4 +2,4 @@ FROM docker:latest
 
 COPY . .
 
-CMD [ "docker", "compose", "up" ]
+CMD [ "docker-compose", "up", "--build" ]
