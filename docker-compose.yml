@@ -1,0 +1,45 @@
+name: astro_chat_production
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx_prod_container
+    # mem_limit: 128m
+    hostname: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - astro_chat_api
+      - astro_chat_web
+  astro_chat_api:
+    build:
+      context: ./astro_chat_api
+      dockerfile: Dockerfile
+    container_name: astro_chat_prod_api_container
+    # mem_limit: 128m
+    hostname: astro_chat_api
+    environment:
+      - PORT=${API_PORT}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_REFRESH_TOKEN_SECRET_KEY=${JWT_REFRESH_TOKEN_SECRET_KEY}
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - EMAIL_SERVER_HOST=${EMAIL_SERVER_HOST}
+      - EMAIL_SERVER_PORT=${EMAIL_SERVER_PORT}
+      - EMAIL_SERVER_USER=${EMAIL_SERVER_USER}
+      - EMAIL_SERVER_PASSWORD=${EMAIL_SERVER_PASSWORD}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
+  astro_chat_web:
+    build:
+      context: ./astro_chat_web
+      dockerfile: Dockerfile
+    container_name: astro_chat_prod_web_container
+    # mem_limit: 128m
+    hostname: astro_chat_web
+    environment:
+      - VITE_PORT=${WEB_PORT}

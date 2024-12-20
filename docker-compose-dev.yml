@@ -1,0 +1,51 @@
+name: astro_chat_development
+services:
+  astro_chat_api:
+    build:
+      context: ./astro_chat_api
+      dockerfile: Dockerfile.dev
+    container_name: astro_chat_dev_api_container
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    volumes:
+      - /astro_chat_api/node_modules
+      - ./astro_chat_api:/astro_chat_api
+    environment:
+      - PORT=${API_PORT}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_REFRESH_TOKEN_SECRET_KEY=${JWT_REFRESH_TOKEN_SECRET_KEY}
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - EMAIL_SERVER_HOST=${EMAIL_SERVER_HOST}
+      - EMAIL_SERVER_PORT=${EMAIL_SERVER_PORT}
+      - EMAIL_SERVER_USER=${EMAIL_SERVER_USER}
+      - EMAIL_SERVER_PASSWORD=${EMAIL_SERVER_PASSWORD}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
+  astro_chat_web:
+    build:
+      context: ./astro_chat_web
+      dockerfile: Dockerfile.dev
+    container_name: astro_chat_dev_web_container
+    ports:
+      - "${WEB_PORT}:${WEB_PORT}"
+    volumes:
+      - /astro_chat_web/node_modules
+      - ./astro_chat_web:/astro_chat_web
+    environment:
+      - VITE_PORT=${WEB_PORT}
+  # astro_chat_mobile:
+  #   build:
+  #     context: ./astro_chat_mobile
+  #     dockerfile: Dockerfile.dev
+  #   container_name: astro_chat_dev_mobile_container
+  #   volumes:
+  #     - /astro_chat_mobile/node_modules
+  #     - ./astro_chat_mobile:/astro_chat_mobile
+  #   ports:
+  #     - "${MOBILE_PORT}:${MOBILE_PORT}"
+  #     - "${METTRO_BUNDLER_PORT}:${METTRO_BUNDLER_PORT}"
+  #     - "${EXPO_DEV_PORT}:${EXPO_DEV_PORT}"

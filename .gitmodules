@@ -1,0 +1,9 @@
+[submodule "astro_chat_api"]
+	path = astro_chat_api
+	url = git@github.com:ssttonn/astro_chat_api.git
+[submodule "astro_chat_mobile"]
+	path = astro_chat_mobile
+	url = git@github.com:ssttonn/astro_chat_mobile.git
+[submodule "astro_chat_web"]
+	path = astro_chat_web
+	url = git@github.com:ssttonn/astro_chat_web.git
