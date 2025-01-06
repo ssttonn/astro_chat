@@ -1,0 +1,31 @@
+name: Deploy AstroChat Production
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout AstroChat source code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          token: ${{ secrets.PAT_TOKEN }}
+      - name: Login to Docker
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        
+      - name: Generate deployment package to deploy to EB
+        run: zip -r deploy.zip . -x '*.git*'
+      
+      - name: Deploy Production application to EB
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: Aspo Production
+          environment_name: aspo-prod-env
+          existing_bucket_name: elasticbeanstalk-ap-southeast-2-339712796583
+          region: ap-southeast-2
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
